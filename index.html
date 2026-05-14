@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>AETHER — read-only CS2 overlay</title>
+  <meta name="description" content="A read-only external overlay for Counter-Strike 2. Mouse-driven aim, zero memory writes. Solo-built, invite-only beta." />
+
+  <!-- open graph -->
+  <meta property="og:title" content="AETHER" />
+  <meta property="og:description" content="Read-only CS2 overlay. Pure SendInput. Solo-built, invite beta." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aetherr.site/" />
+  <meta property="og:image" content="https://aetherr.site/assets/og.png" />
+  <link rel="canonical" href="https://aetherr.site/" />
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ambient backdrop -->
+<div class="bg" aria-hidden="true">
+  <div class="bg__violet"></div>
+  <div class="bg__noise"></div>
+  <div class="bg__grid"></div>
+</div>
+
+<header class="nav">
+  <a href="#top" class="nav__brand">
+    <span class="nav__dot"></span>
+    <span class="nav__name">AETHER</span>
+  </a>
+  <nav class="nav__links">
+    <a href="#what">what</a>
+    <a href="#stealth">stealth</a>
+    <a href="#beta">beta</a>
+    <a href="#faq">faq</a>
+  </nav>
+  <a class="btn btn--ghost nav__cta" href="#beta">join discord →</a>
+</header>
+
+<main>
+
+<!-- ============================================================ HERO -->
+<section id="top" class="hero">
+  <div class="hero__inner">
+
+    <p class="hero__kicker">
+      <span class="pulse"></span> v1.0-beta &nbsp;·&nbsp; CS2 build 2026-05-13
+    </p>
+
+    <h1 class="hero__wordmark" aria-label="AETHER">
+      <span>A</span><span>E</span><span>T</span><span>H</span><span>E</span><span>R</span>
+    </h1>
+
+    <p class="hero__tag">
+      Read-only external overlay for Counter-Strike 2.<br/>
+      Pure mouse driven. <em>Zero</em> memory writes.
+    </p>
+
+    <div class="hero__ctas">
+      <a class="btn btn--primary" href="#beta">request invite</a>
+      <a class="btn btn--ghost" href="#what">what is this</a>
+    </div>
+
+    <ul class="hero__chips" aria-label="quick facts">
+      <li><b>read-only</b> handle</li>
+      <li>solo dev</li>
+      <li>invite beta</li>
+      <li>~410 KB exe</li>
+      <li>no installer</li>
+    </ul>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ WHAT -->
+<section id="what" class="section">
+  <div class="section__head">
+    <span class="section__num">01</span>
+    <h2>what it actually is</h2>
+  </div>
+
+  <div class="grid grid--3">
+
+    <article class="card">
+      <h3>read-only by design</h3>
+      <p>
+        Process handle is opened with <code>PROCESS_VM_READ</code> +
+        <code>QUERY_LIMITED_INFORMATION</code>. There is literally no
+        write code path in the binary. Every active feature
+        (aimbot, trigger, bhop) goes through <code>SendInput</code>.
+      </p>
+      <p class="muted">
+        That means anti-cheat sees a normal process reading public
+        memory regions. No injection, no module map mismatch, no
+        hooked syscalls inside CS2.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3>humanised aim</h3>
+      <p>
+        Aim path is a cubic bezier curve with min-jerk easing,
+        Fitts's-law timing and 1D coherent noise overlaid. Every
+        lock generates a fresh curve with a small intentional
+        overshoot at the end.
+      </p>
+      <p class="muted">
+        Not "smooth aim with a lerp". Different shape every shot,
+        because that's how a wrist actually moves.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3>visual layer</h3>
+      <p>
+        DirectX 11 + ImGui rendered into a layered transparent window
+        sitting on top of CS2. Marked
+        <code>WDA_EXCLUDEFROMCAPTURE</code> so OBS, ShadowPlay and
+        the Windows snip tool see nothing.
+      </p>
+      <p class="muted">
+        Watermark shows AETHER + K/HS/$ + FPS. Toggle from menu.
+      </p>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ FEATURES -->
+<section class="section section--alt">
+  <div class="section__head">
+    <span class="section__num">02</span>
+    <h2>what's in the build</h2>
+  </div>
+
+  <div class="features">
+
+    <div class="feat-col">
+      <h4>player esp</h4>
+      <ul>
+        <li>boxes — corners / full / 3D</li>
+        <li>glow outline (pulsing)</li>
+        <li>health bar + armor bar</li>
+        <li>distance, velocity, weapon, name</li>
+        <li>round K/HS, money, flash bar</li>
+        <li>bomb carrier marker</li>
+        <li>off-screen direction arrows</li>
+      </ul>
+    </div>
+
+    <div class="feat-col">
+      <h4>aim</h4>
+      <ul>
+        <li>aimbot — bezier + perlin path</li>
+        <li>configurable smooth + jitter</li>
+        <li>fov circle + closest mode</li>
+        <li>auto-fire under fov threshold</li>
+        <li>triggerbot with reaction delay</li>
+        <li>velocity prediction</li>
+        <li>auto-bhop with miss chance</li>
+      </ul>
+    </div>
+
+    <div class="feat-col">
+      <h4>hud / map</h4>
+      <ul>
+        <li>spectator list (top right)</li>
+        <li>session stats in watermark</li>
+        <li>custom crosshair (4 styles)</li>
+        <li>sniper crosshair (auto on awp)</li>
+        <li>counter-strafe dot</li>
+        <li>configurable colors per role</li>
+      </ul>
+    </div>
+
+    <div class="feat-col">
+      <h4>stealth</h4>
+      <ul>
+        <li>screen capture exclusion</li>
+        <li>random per-launch window class</li>
+        <li>FNV-1a hashed imports</li>
+        <li>PEB walker (no LoadLibrary)</li>
+        <li>stripped RTTI + buffer cookies</li>
+        <li>no debug info in release exe</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ STEALTH -->
+<section id="stealth" class="section">
+  <div class="section__head">
+    <span class="section__num">03</span>
+    <h2>how it stays quiet</h2>
+  </div>
+
+  <div class="prose">
+    <p>
+      Most external "wallhacks" get caught not because of what they
+      do but because of how they look on the way in. AETHER drops
+      the obvious tells:
+    </p>
+    <dl>
+      <dt>handle never asks for write</dt>
+      <dd>
+        VAC has been seen flagging processes that hold
+        <code>PROCESS_VM_WRITE</code> against <code>cs2.exe</code>
+        even if they never write. We never request it.
+      </dd>
+
+      <dt>imports resolved at runtime</dt>
+      <dd>
+        No <code>NtReadVirtualMemory</code> in the IAT. Functions
+        are looked up via PEB walk + FNV-1a hash. Static-string
+        scanners find nothing.
+      </dd>
+
+      <dt>random window class per launch</dt>
+      <dd>
+        Class name is generated on startup from a CryptGenRandom
+        seed. Two launches of the same exe produce two different
+        windows for fingerprint scanners.
+      </dd>
+
+      <dt>invisible to capture</dt>
+      <dd>
+        <code>SetWindowDisplayAffinity(WDA_EXCLUDEFROMCAPTURE)</code>
+        — your overlay does not appear in screenshots, OBS,
+        ShadowPlay, or the Windows snipping tool. Streaming is
+        safe.
+      </dd>
+    </dl>
+    <p class="muted">
+      We don't claim to be undetected forever. We claim to be the
+      smallest, quietest read-only overlay you'll find — and to
+      patch within hours when CS2 ships an offset shift.
+    </p>
+  </div>
+</section>
+
+
+<!-- ============================================================ BETA -->
+<section id="beta" class="section section--alt">
+  <div class="section__head">
+    <span class="section__num">04</span>
+    <h2>beta access</h2>
+  </div>
+
+  <div class="beta">
+
+    <div class="beta__copy">
+      <p class="lede">
+        Currently invite-only through the Discord. Free during the
+        whole beta. Anyone who joins now gets the
+        <b>OG</b> tier at 1.0 launch — permanent 50% off any
+        subscription tier, no expiry.
+      </p>
+
+      <ul class="beta__how">
+        <li>1. join the Discord</li>
+        <li>2. press the verify button, solve the captcha</li>
+        <li>3. <code>#downloads</code> opens — grab the build</li>
+        <li>4. report bugs with <code>/bug</code> — get OG faster</li>
+      </ul>
+
+      <div class="beta__cta">
+        <a class="btn btn--primary btn--lg" href="DISCORD_INVITE_URL">join the discord</a>
+        <a class="btn btn--ghost" href="#faq">read the small print</a>
+      </div>
+    </div>
+
+    <aside class="beta__notice">
+      <h4>before you ask</h4>
+      <p>
+        Use on an alt account. We are not responsible for VAC bans
+        or main-account loss. The build is read-only, but Valve has
+        the last word.
+      </p>
+      <p class="muted">
+        Anyone selling an "AETHER private build" outside this
+        Discord is scamming you. There is one Discord. There is one
+        download channel. Leakers are perma + listed.
+      </p>
+    </aside>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ FAQ -->
+<section id="faq" class="section">
+  <div class="section__head">
+    <span class="section__num">05</span>
+    <h2>questions you'll have</h2>
+  </div>
+
+  <div class="faq">
+
+    <details>
+      <summary>am i going to get banned</summary>
+      <p>
+        Maybe. AETHER is read-only and uses <code>SendInput</code>
+        for active features, which is the lowest-risk approach
+        available. There is no public-domain "guaranteed safe"
+        overlay for CS2 because Valve does not publish their
+        criteria. Use an alt. If you put your main on the line you
+        accepted the risk.
+      </p>
+    </details>
+
+    <details>
+      <summary>why doesn't it have a team behind it</summary>
+      <p>
+        Because every cheat-ring with a team is also a cheat-ring
+        with a leak surface. Nobody else has the source. Nobody
+        else has the offsets. There is no support agent in another
+        timezone re-uploading the binary to a Telegram channel for
+        $5.
+      </p>
+    </details>
+
+    <details>
+      <summary>your text on vacban looks ai-generated, what gives</summary>
+      <p>
+        First draft of the listing was written with help from a
+        language model and someone called it out, fairly. The
+        actual code, offsets, render path and aim engine were
+        hand-written. We rewrote the listing. We're not going to
+        pretend we don't use tools — we just don't ship slop.
+      </p>
+    </details>
+
+    <details>
+      <summary>when does the beta end</summary>
+      <p>
+        When the build is stable across two consecutive CS2 patches
+        with no critical bugs in <code>#bug-reports</code> for
+        seven days. Best estimate: 4–6 weeks from now. Beta
+        members get OG at launch and keep their seat.
+      </p>
+    </details>
+
+    <details>
+      <summary>what about a free version after launch</summary>
+      <p>
+        No free tier. The cost of doing this safely is paying for a
+        single developer to actually update the build the day a
+        patch lands. Free overlays are free because nobody's
+        paying for anyone to update them, which is why they all
+        get caught.
+      </p>
+    </details>
+
+    <details>
+      <summary>can i resell / repack / share</summary>
+      <p>
+        No. Per-customer watermarks (HWID + canary strings) ship
+        with 1.0 — leaked builds will trace back to whoever
+        bought the seat. During the free beta the deterrent is
+        community: leak = perma + #wall-of-shame + your Steam URL
+        publicly listed.
+      </p>
+    </details>
+
+  </div>
+</section>
+
+
+</main>
+
+<footer class="footer">
+  <div class="footer__row">
+    <div>
+      <p class="footer__brand">AETHER</p>
+      <p class="muted">solo-built · read-only · CS2 only</p>
+    </div>
+    <div class="footer__links">
+      <a href="DISCORD_INVITE_URL">discord</a>
+      <a href="VIRUSTOTAL_SCAN_URL">virustotal</a>
+      <a href="mailto:CONTACT_EMAIL">email</a>
+    </div>
+  </div>
+  <p class="footer__small">
+    no installer. no telemetry. no auto-update phone-home (yet).<br/>
+    <span class="muted">use on an alt account. we are not responsible for VAC bans.</span>
+  </p>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>

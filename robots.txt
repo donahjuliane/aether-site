@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# we want the marketing page indexed, that's the whole point.
+# we don't have a sitemap because the site is one page.
