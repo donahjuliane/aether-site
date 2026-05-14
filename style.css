@@ -125,6 +125,15 @@ main { position: relative; z-index: 1; }
   box-shadow: 0 0 10px var(--accent);
   animation: pulse 2.4s ease-in-out infinite;
 }
+.nav__logo {
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(150,115,230,.5));
+  transition: transform .25s ease, filter .25s ease;
+}
+.nav__brand:hover .nav__logo {
+  transform: rotate(-6deg) scale(1.06);
+  filter: drop-shadow(0 0 10px rgba(150,115,230,.7));
+}
 @keyframes pulse {
   0%,100% { opacity: 0.7; transform: scale(1); }
   50%     { opacity: 1; transform: scale(1.18); }
@@ -491,6 +500,15 @@ main { position: relative; z-index: 1; }
   gap: 24px;
   flex-wrap: wrap;
   margin-bottom: 32px;
+}
+.footer__brand-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.footer__logo {
+  display: block;
+  filter: drop-shadow(0 0 8px rgba(150,115,230,.4));
 }
 .footer__brand {
   font: 700 1rem var(--font-sans);

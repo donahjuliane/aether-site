@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>AETHER · SVG → PNG rasterizer</title>
+<style>
+  body {
+    background: #0a0a0d;
+    color: #ece8f5;
+    font: 15px/1.6 'Inter', system-ui, sans-serif;
+    padding: 50px 30px 100px;
+    max-width: 900px; margin: 0 auto;
+  }
+  h1 {
+    font: 700 26px/1.2 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  .lead { color: #7d7891; margin-bottom: 50px; }
+  .item {
+    background: #14141b;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 18px;
+  }
+  .item h3 {
+    font: 600 17px 'Inter';
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .item p {
+    color: #b9b3ca;
+    font-size: 13px;
+    margin: 0 0 18px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .preview {
+    background:
+      repeating-conic-gradient(#1a1a22 0% 25%, #14141b 0% 50%) 50% / 16px 16px;
+    border: 1px solid rgba(255,255,255,.05);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .preview img { display: block; }
+  button {
+    background: linear-gradient(180deg, #b59cf0, #9673e6);
+    color: #0c0a14;
+    font: 600 14px 'Inter';
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(150,115,230,.3);
+    transition: transform .12s, box-shadow .2s;
+  }
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(150,115,230,.45);
+  }
+  button:active { transform: translateY(0); }
+  .meta {
+    font: 500 11px 'JetBrains Mono', monospace;
+    color: #7d7891;
+    letter-spacing: 0.1em;
+    margin-top: 12px;
+  }
+  .ok { color: #5ac8dc; }
+  .note {
+    margin-top: 48px;
+    padding: 20px 24px;
+    background: rgba(150,115,230,.06);
+    border-left: 3px solid #9673e6;
+    border-radius: 6px;
+    color: #b9b3ca;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .note code {
+    font: 500 12px 'JetBrains Mono', monospace;
+    color: #b59cf0;
+    background: rgba(0,0,0,.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  canvas { display: none; }
+</style>
+</head>
+<body>
+
+<h1>AETHER · rasterizer</h1>
+<p class="lead">Klik na każdy "Download" — leci PNG do twoich pobranych. Wszystko lokalnie, bez wysyłania nigdzie.</p>
+
+<div class="item">
+  <h3>Discord server icon</h3>
+  <p>512×512 PNG. Idzie do Server Settings → Overview → Server Icon.</p>
+  <div class="row">
+    <div class="preview"><img src="assets/logo.svg" width="160" height="160" alt=""></div>
+    <button onclick="rasterize('assets/logo.svg', 512, 512, 'aether-discord-512.png', '#0a0a0d')">
+      ⬇ Download Discord PNG (512×512)
+    </button>
+  </div>
+  <p class="meta">filename: aether-discord-512.png</p>
+</div>
+
+<div class="item">
+  <h3>TikTok / X / general avatar</h3>
+  <p>400×400 PNG. Profil TikTok, Twitter/X, gdziekolwiek pasuje square.</p>
+  <div class="row">
+    <div class="preview"><img src="assets/logo.svg" width="120" height="120" alt=""></div>
+    <button onclick="rasterize('assets/logo.svg', 400, 400, 'aether-avatar-400.png', '#0a0a0d')">
+      ⬇ Download Avatar PNG (400×400)
+    </button>
+  </div>
+  <p class="meta">filename: aether-avatar-400.png</p>
+</div>
+
+<div class="item">
+  <h3>Open Graph preview (Discord/Twitter link unfurl)</h3>
+  <p>1200×630 PNG. Idzie do <code>web/assets/og.png</code> — pokazuje się gdy ktoś wkleja aetherr.site.</p>
+  <div class="row">
+    <div class="preview"><img src="assets/og-source.svg" width="380" height="200" alt=""></div>
+    <button onclick="rasterize('assets/og-source.svg', 1200, 630, 'og.png', '#0a0a0d')">
+      ⬇ Download OG PNG (1200×630)
+    </button>
+  </div>
+  <p class="meta">filename: og.png · zapisz w <span style="color:#b59cf0">web/assets/og.png</span></p>
+</div>
+
+<div class="item">
+  <h3>Favicon stack (bonus)</h3>
+  <p>16/32/48/96px PNG fallback dla starszych przeglądarek (na nowych SVG wystarczy).</p>
+  <div class="row">
+    <div class="preview"><img src="assets/favicon.svg" width="48" height="48" alt=""></div>
+    <button onclick="rasterize('assets/favicon.svg', 96, 96, 'favicon-96.png', null)">
+      ⬇ Download favicon PNG (96×96)
+    </button>
+  </div>
+  <p class="meta">filename: favicon-96.png</p>
+</div>
+
+<div class="note">
+  <b>Co dalej z PNG-ami:</b><br>
+  • <code>aether-discord-512.png</code> → Discord Server Settings → Overview → drag&amp;drop jako Server Icon<br>
+  • <code>aether-avatar-400.png</code> → TikTok/X profile picture upload<br>
+  • <code>og.png</code> → przenieś do <code>web/assets/og.png</code>, commit + push, social media zacznie unfurlować ładnie<br>
+  • <code>favicon-96.png</code> → opcjonalnie, dla edge cases (większość przeglądarek czyta SVG favicon prosto)
+</div>
+
+<canvas id="cv"></canvas>
+
+<script>
+async function rasterize(svgUrl, w, h, filename, bg) {
+  const cv = document.getElementById('cv');
+  cv.width  = w;
+  cv.height = h;
+  const ctx = cv.getContext('2d');
+
+  // Optional opaque background — needed for og.png and Discord (no transparency).
+  if (bg) {
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  // Load SVG as data URL so the Image canvas pipeline works without CORS.
+  const res  = await fetch(svgUrl);
+  const txt  = await res.text();
+  const blob = new Blob([txt], { type: 'image/svg+xml' });
+  const url  = URL.createObjectURL(blob);
+
+  await new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve();
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+
+  // Trigger download.
+  cv.toBlob((b) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }, 'image/png');
+}
+</script>
+
+</body>
+</html>
